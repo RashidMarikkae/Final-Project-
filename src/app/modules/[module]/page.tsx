@@ -3,6 +3,8 @@ import { notFound, redirect } from "next/navigation";
 import { connection } from "next/server";
 import { Icon } from "@/app/components/ui-icon";
 import { PortalShell } from "@/app/components/portal-shell";
+import { RoomManagementView, type RoomWorkspaceView } from "@/app/components/room-management-view";
+import { OperationsWorkspace } from "@/app/components/operations-workspace";
 import { getCurrentUser, hasPermission, homePathFor } from "@/lib/auth";
 import { getHotelName } from "@/lib/hotel";
 import { getDemoHotelName, isDemoMode } from "@/lib/demo";
@@ -51,19 +53,31 @@ async function ModuleContent({ params }: { params: Promise<{ module: string }> }
     day: "numeric",
     timeZone: "Asia/Colombo",
   }).format(new Date());
+  const roomWorkspaceView: RoomWorkspaceView | null =
+    moduleKey === "rooms" ? "overview" :
+      moduleKey === "reservations" ? "reservations" :
+        moduleKey === "front-desk" ? "operations" : null;
+  const operationsModule =
+    moduleKey === "housekeeping" || moduleKey === "inventory" || moduleKey === "restaurant"
+        ? moduleKey
+        : null;
   return (
     <PortalShell user={user} dateLabel={dateLabel} hotelName={isDemoMode() ? getDemoHotelName() : await getHotelName()} demoMode={isDemoMode()}>
-      <div className="placeholder-page">
-        <div className="page-heading"><div><div className="breadcrumb">Workspace <Icon name="chevron" size={14} /> {moduleInfo.title}</div><h1>{moduleInfo.title}</h1><p>{moduleInfo.description}</p></div></div>
-        <section className="panel placeholder-card">
-          <span className="placeholder-icon"><Icon name="building" size={25} /></span>
-          <span className="placeholder-badge">COMING SOON</span>
-          <h2>This module is ready for its next chapter.</h2>
-          <p>{moduleInfo.title} has its own protected workspace. Detailed workflows and data tools will be added in a future release.</p>
-          <div className="placeholder-separator" />
-          <span className="placeholder-meta">{moduleInfo.group} <i /> Available to your role</span>
-        </section>
-      </div>
+        {operationsModule
+          ? <OperationsWorkspace module={operationsModule} roleName={user.roleName} userName={`${user.firstName} ${user.lastName}`} asOfDate={new Date().toISOString().slice(0, 10)} />
+          : roomWorkspaceView
+          ? <RoomManagementView initialView={roomWorkspaceView} roleName={user.roleName} permissions={user.permissions} />
+        : <div className="placeholder-page">
+          <div className="page-heading"><div><div className="breadcrumb">Workspace <Icon name="chevron" size={14} /> {moduleInfo.title}</div><h1>{moduleInfo.title}</h1><p>{moduleInfo.description}</p></div></div>
+          <section className="panel placeholder-card">
+            <span className="placeholder-icon"><Icon name="building" size={25} /></span>
+            <span className="placeholder-badge">COMING SOON</span>
+            <h2>This module is ready for its next chapter.</h2>
+            <p>{moduleInfo.title} has its own protected workspace. Detailed workflows and data tools will be added in a future release.</p>
+            <div className="placeholder-separator" />
+            <span className="placeholder-meta">{moduleInfo.group} <i /> Available to your role</span>
+          </section>
+        </div>}
     </PortalShell>
   );
 }

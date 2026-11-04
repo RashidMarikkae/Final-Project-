@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useMemo, useState, type ReactNode } from "react";
 import { Icon } from "@/app/components/ui-icon";
+import { OperationsProvider } from "@/app/components/operations-store";
 
 type NavItem = {
   label: string;
@@ -222,7 +223,7 @@ export function PortalShell({
             </div>
           </div>
         </header>
-        <main className="page-content">{children}</main>
+        <main className="page-content"><OperationsProvider>{children}</OperationsProvider></main>
       </div>
     </div>
   );

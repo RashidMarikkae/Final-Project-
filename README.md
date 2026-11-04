@@ -57,7 +57,11 @@ Sign in with username `hoteladmin` and password `AureliaTest!2026`. Demo mode is
 
 ## Current scope
 
-The application includes secure password-based sign-in, signed HTTP-only sessions, database-backed role permissions, a protected dashboard with live database statistics, user administration, hotel/profile settings, audit events, and access-controlled placeholders for planned operational modules.
+The application includes secure password-based sign-in, signed HTTP-only sessions, database-backed role permissions, a protected dashboard with live database statistics, user administration, hotel/profile settings, audit events, and access-controlled operational workspaces.
+
+Room Management, Reservations, and Front Desk include a frontend-only workflow using 30 sample rooms and local component state. Availability and double-booking checks use reservation date ranges; reservation edits, status changes, check-in/out, transfers, and room type changes are not persisted to PostgreSQL and reset when the workspace is reloaded.
+
+Housekeeping, centralized hotel and restaurant inventory, restaurant orders, kitchen workflow, and room service use realistic frontend-only mock data and shared local React state. The sample workspaces include ten housekeeping employees, shift scheduling and overlap checks, checkout-triggered cleaning tasks, fifty stock items, stock requests and movements, ingredient-aware menus and order completion, room-service billing simulation, and delivery tracking. Demo changes are not persisted to PostgreSQL and reset when the workspace is reloaded.
 
 The initial roles are Super Admin, Hotel Manager, Receptionist, Accountant, HR Manager, Restaurant Manager, Inventory Manager, Housekeeping Staff, and Maintenance Staff. A Super Admin has every permission. Access is checked on protected pages and API endpoints; sidebar visibility is only a usability aid.
 
